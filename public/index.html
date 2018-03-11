@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Hackathon Sample UI - Log Viewer</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+        <link rel="stylesheet" href="style.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    </head>
+    <body>
+        <div class="container">
+            <!-- A sidebar where you can put anything you want, or remove it -->
+            <div class="sidebar">
+                <!-- A tabbed navigation in the sidebar -->
+                <nav>
+                    <ul>
+                        <li class="current"><a href="#">Tab 1</a></li>
+                        <li><a href="#">Tab 2</a></li>
+                    </ul>
+                </nav>
+                <!-- A search box in the sidebar -->
+                <div class="search">
+                    <span class="search-box">
+                        <input type="text" placeholder="Search...">
+                        <div class="icon"><i class="fas fa-search"></i></div>
+                    </span>
+                </div>
+                <!-- A list of links or items in the sidebar -->
+                <ul class="items">
+                    <li><a href="#">Here are</a></li>
+                    <li class="current"><a href="#">some links</a></li>
+                    <li><a href="#">you can use</a></li>
+                    <li><a href="#">for anything</a></li>
+                </ul>
+            </div>
+            <!-- A main content area -->
+            <div class="main-area">
+                <!-- A header above the main content -->
+                <header>
+                    <!-- A search box in the header -->
+                    <span class="search-box large">
+                        <input type="text" placeholder="Search...">
+                        <div class="icon"><i class="fas fa-search"></i></div>
+                    </span>
+                </header>
+                <!-- The main content area, you could put logs here -->
+                <main>
+                    <p>Some main content here in paragraphs</p>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce elementum, arcu quis iaculis maximus, odio arcu eleifend nibh,
+                        non tempus metus orci eget purus. Curabitur vitae mi arcu. Vivamus et tempus diam. Donec pretium elit arcu, non ullamcorper magna
+                        porttitor ac. Ut et diam nisl. Fusce vel turpis lacus. Nunc quam risus, imperdiet ut condimentum nec, facilisis ullamcorper
+                        tellus. Donec nec odio metus. Ut sed nulla in nulla pellentesque interdum quis in massa. Duis a malesuada erat, et mattis lacus.
+                    </p>
+                    <ul class="items">
+                        <li>A list of content</li>
+                        <li>in the main content area.</li>
+                        <li class="selected">Could be a list of JSON log entries</li>
+                        <li>or you could parse the JSON into a</li>
+                        <li>more readable format here</li>
+			
+			
+
+                    </ul>
+		<ul id="logslist"> </ul>
+
+
+
+                </main>
+            </div>
+        </div>
+    </body>
+
+	<script src="index.js"></script>
+
+
+
+</html>

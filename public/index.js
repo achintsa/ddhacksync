@@ -8,6 +8,7 @@ function createNode(element) {
     return parent.appendChild(el);
   }
 
+  function searchlogs(){
   let ul = document.getElementById('logslist');
   let x = document.getElementById('x');
   let timedelta  = document.getElementById('timedelta');
@@ -32,6 +33,33 @@ if(timedelta == "2"){
 }
 url = url+param1;
 fetchDateUrl(url);
+    
+  }
+
+//   let ul = document.getElementById('logslist');
+//   let x = document.getElementById('x');
+//   let timedelta  = document.getElementById('timedelta');
+
+// console.log(ul);
+// // const url="http://cuddly-treefrog.hackathon.venom360.com/api/logs/cratedb?min=2018-02-12T00:00:00.000Z&max=2018-02-12T00:00:09.999Z";
+// var url = window.location.toString();
+// url = url+"/api/logs/";
+// var param1;
+// //seconds
+// if(timedelta == "0"){
+//   param1 = "rethinkdblastxseconds" + "?x=" + x ;
+// }
+// //minutes
+// if(timedelta == "1"){
+//   param1 = "rethinkdblastxminutes" + "?x=" + x ;
+
+// }
+// //hour
+// if(timedelta == "2"){
+//   param1 = "rethinkdblastxminutes" + "?x=" + x ;
+// }
+// url = url+param1;
+// fetchDateUrl(url);
 // const url = 'https://randomuser.me/api/?results=10';
 
 function fetchDateUrl(url){

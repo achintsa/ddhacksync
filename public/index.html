@@ -68,9 +68,13 @@
                         <div style="visibility: hidden">
                             <div id="startdt"> Start Time <input  type="text" name="startdatetime"> </div>      <div id="enddt" > End Time <input type="text"  name="enddatetime"> </div>
                         </div>
+                        <input type="button"  
+                                value="Search Logs"  
+                                name="button2"  
+                                onclick='searchlogs()' />
 
                         <ul id="logslist"> </ul>
-                        
+
                         <li>List of URLs being hit</li>
                         <li class="selected">Could be a list of JSON log entries</li>
                         <li>List of IPs and Analyzing DDoS attacks probability</li>

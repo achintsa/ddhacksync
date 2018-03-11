@@ -7,7 +7,6 @@
  * Feel free to modify this code however you want, or delete
  * it and start over from scratch.
  */
-
 require('dotenv/config');
 const nconf = require('nconf');
 const Koa = require('koa');
@@ -21,8 +20,13 @@ const max_limit = 50000;
 
 // Initialize configuration variables
 nconf
-    .argv({ parseValues: true })
-    .env({ parseValues: true, lowerCase: true })
+    .argv({
+        parseValues: true
+    })
+    .env({
+        parseValues: true,
+        lowerCase: true
+    })
     .defaults({
         rethink_database: 'hackathon',
         rethink_port: 28015,
@@ -41,10 +45,13 @@ nconf
 // Connect to databases
 const r = rethinkdbdash({
     db: nconf.get('rethink_database'),
-    servers: [
-        { host: nconf.get('rethink_host'), port: nconf.get('rethink_port') }
-    ],
-    ssl: { rejectUnauthorized: false }
+    servers: [{
+        host: nconf.get('rethink_host'),
+        port: nconf.get('rethink_port')
+    }],
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 crate.connect(nconf.get('crate_host'), nconf.get('crate_port'));
@@ -57,67 +64,82 @@ app.use(logger());
 
 // HTTP GET /logs/rethinkdb?min=etc&max=etc to get logs between dates
 router.get('/logs/rethinkdb', async ctx => {
-   
-	 const { min, max, availabilityZone } = ctx.query;
-console.log(ctx.query);
 
-avzone = availabilityZone;
+    const {
+        min,
+        max,
+        availabilityZone
+    } = ctx.query;
+    console.log(ctx.query);
+
+    avzone = availabilityZone;
     if (!min || !max)
         ctx.throw(400, 'Must specify min and max in query string.');
 
     const minDate = moment.utc(min, moment.ISO_8601);
     const maxDate = moment.utc(max, moment.ISO_8601);
 
-    if (!minDate.isValid() || !maxDate.isValid() )
+    if (!minDate.isValid() || !maxDate.isValid())
         ctx.throw(400, 'Min and max must be ISO 8601 date strings');
 
-console.log("avzone",avzone);
+    console.log("avzone", avzone);
 
-if(!avzone || avzone==null ) {
-console.log('invalid avzone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
- 	.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
+    if (!avzone || avzone == null) {
+        console.log('invalid avzone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
-
-    ctx.status = 200;
-    ctx.body = entries;
+            .limit(max_limit)
+            .run();
 
 
-
-}
-
-
-else{
-
-console.log('valid availabilityZone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
-	.filter({ availabilityZone :avzone  }  )
- 	.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
-
-
-    ctx.status = 200;
-    ctx.body = entries;
+        ctx.status = 200;
+        ctx.body = entries;
 
 
 
-}
+    } else {
+
+        console.log('valid availabilityZone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .filter({
+                availabilityZone: avzone
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+
+            .limit(max_limit)
+            .run();
+
+
+        ctx.status = 200;
+        ctx.body = entries;
+
+
+
+    }
 
 
 });
 
+router.get('/', ctx => {
+    ctx.status = 200
+    ctx.body = "Hello world!"
+})
+
 // HTTP GET /logs/cratedb?min=etc&max=etc to get logs between dates
 router.get('/logs/cratedb', async ctx => {
-    const { min, max } = ctx.query;
+    const {
+        min,
+        max
+    } = ctx.query;
     if (!min || !max)
         ctx.throw(400, 'Must specify min and max in query string.');
 
@@ -128,8 +150,7 @@ router.get('/logs/cratedb', async ctx => {
         ctx.throw(400, 'Min and max must be ISO 8601 date strings');
 
     const entries = await crate.execute(
-        'SELECT  *  FROM logs WHERE  time BETWEEN ? AND ?   LIMIT ?',
-        [minDate.toDate(), maxDate.toDate(), max_limit]
+        'SELECT  *  FROM logs WHERE  time BETWEEN ? AND ?   LIMIT ?', [minDate.toDate(), maxDate.toDate(), max_limit]
     );
 
     ctx.status = 200;
@@ -138,196 +159,222 @@ router.get('/logs/cratedb', async ctx => {
 
 // HTTP GET /logs/rethinkdblastxhour to get logs between dates
 router.get('/logs/rethinkdblastxhour', async ctx => {
-const newDate = new Date();   
-const max = new Date().toISOString();
-	
-	 const { x,availabilityZone } = ctx.query;
- const beforequery = 1000 * 60 * 60* x;
-const min = new Date (new Date().getTime()  - beforequery).toISOString();
-console.log("min : " + min );
-console.log("max: "  + max );
-console.log(ctx.query);
-avzone = availabilityZone;
+    const newDate = new Date();
+    const max = new Date().toISOString();
+
+    const {
+        x,
+        availabilityZone
+    } = ctx.query;
+    const beforequery = 1000 * 60 * 60 * x;
+    const min = new Date(new Date().getTime() - beforequery).toISOString();
+    console.log("min : " + min);
+    console.log("max: " + max);
+    console.log(ctx.query);
+    avzone = availabilityZone;
     if (!min || !max)
         ctx.throw(400, 'Must specify min and max in query string.');
 
     const minDate = moment.utc(min, moment.ISO_8601);
     const maxDate = moment.utc(max, moment.ISO_8601);
 
-    if (!minDate.isValid() || !maxDate.isValid() )
+    if (!minDate.isValid() || !maxDate.isValid())
         ctx.throw(400, 'Min and max must be ISO 8601 date strings');
 
-console.log("avzone",avzone);
+    console.log("avzone", avzone);
 
-if(!avzone || avzone==null ) {
-console.log('invalid avzone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
- 	.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
+    if (!avzone || avzone == null) {
+        console.log('invalid avzone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
-
-    ctx.status = 200;
-    ctx.body = entries;
+            .limit(max_limit)
+            .run();
 
 
-
-}
-
-
-else{
-
-console.log('valid availabilityZone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
-	.filter({ availabilityZone :avzone  }  )
- 	.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
-
-
-    ctx.status = 200;
-    ctx.body = entries;
+        ctx.status = 200;
+        ctx.body = entries;
 
 
 
-}
+    } else {
+
+        console.log('valid availabilityZone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .filter({
+                availabilityZone: avzone
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+
+            .limit(max_limit)
+            .run();
+
+
+        ctx.status = 200;
+        ctx.body = entries;
+
+
+
+    }
 
 
 });
 
 // HTTP GET /logs/rethinkdblastxminutes to get logs between dates
 router.get('/logs/rethinkdblastxminutes', async ctx => {
-const newDate = new Date();   
-const max = new Date().toISOString();
-	
-	 const { x,availabilityZone } = ctx.query;
- const beforequery = 1000 * 60 * x;
-const min = new Date (new Date().getTime()  - beforequery).toISOString();
-console.log("min : " + min );
-console.log("max: "  + max );
-console.log(ctx.query);
-avzone = availabilityZone;
+    const newDate = new Date();
+    const max = new Date().toISOString();
+
+    const {
+        x,
+        availabilityZone
+    } = ctx.query;
+    const beforequery = 1000 * 60 * x;
+    const min = new Date(new Date().getTime() - beforequery).toISOString();
+    console.log("min : " + min);
+    console.log("max: " + max);
+    console.log(ctx.query);
+    avzone = availabilityZone;
     if (!min || !max)
         ctx.throw(400, 'Must specify min and max in query string.');
 
     const minDate = moment.utc(min, moment.ISO_8601);
     const maxDate = moment.utc(max, moment.ISO_8601);
 
-    if (!minDate.isValid() || !maxDate.isValid() )
+    if (!minDate.isValid() || !maxDate.isValid())
         ctx.throw(400, 'Min and max must be ISO 8601 date strings');
 
-console.log("avzone",avzone);
+    console.log("avzone", avzone);
 
-if(!avzone || avzone==null ) {
-console.log('invalid avzone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
- 	.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
+    if (!avzone || avzone == null) {
+        console.log('invalid avzone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
-
-    ctx.status = 200;
-    ctx.body = entries;
+            .limit(max_limit)
+            .run();
 
 
-
-}
-
-
-else{
-
-console.log('valid availabilityZone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
-	.filter({ availabilityZone :avzone  }  )
- 	.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
-
-
-    ctx.status = 200;
-    ctx.body = entries;
+        ctx.status = 200;
+        ctx.body = entries;
 
 
 
-}
+    } else {
+
+        console.log('valid availabilityZone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .filter({
+                availabilityZone: avzone
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+
+            .limit(max_limit)
+            .run();
+
+
+        ctx.status = 200;
+        ctx.body = entries;
+
+
+
+    }
 
 
 });
 
 
+
 // HTTP GET /logs/rethinkdblastxseconds to get logs between dates
 router.get('/logs/rethinkdblastxseconds', async ctx => {
-const newDate = new Date();   
-const max = new Date().toISOString();
-	
-	 const { x,availabilityZone } = ctx.query;
- const beforequery = 1000 * 1* x;
-const min = new Date (new Date().getTime()  - beforequery).toISOString();
-console.log("min : " + min );
-console.log("max: "  + max );
-console.log(ctx.query);
-avzone = availabilityZone;
+    const newDate = new Date();
+    const max = new Date().toISOString();
+
+    const {
+        x,
+        availabilityZone
+    } = ctx.query;
+    const beforequery = 1000 * 1 * x;
+    const min = new Date(new Date().getTime() - beforequery).toISOString();
+    console.log("min : " + min);
+    console.log("max: " + max);
+    console.log(ctx.query);
+    avzone = availabilityZone;
     if (!min || !max)
         ctx.throw(400, 'Must specify min and max in query string.');
 
     const minDate = moment.utc(min, moment.ISO_8601);
     const maxDate = moment.utc(max, moment.ISO_8601);
 
-    if (!minDate.isValid() || !maxDate.isValid() )
+    if (!minDate.isValid() || !maxDate.isValid())
         ctx.throw(400, 'Min and max must be ISO 8601 date strings');
 
-console.log("avzone",avzone);
+    console.log("avzone", avzone);
 
-if(!avzone || avzone==null ) {
-console.log('invalid avzone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
- 	//.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
+    if (!avzone || avzone == null) {
+        console.log('invalid avzone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
-
-    ctx.status = 200;
-    ctx.body = entries;
+            .limit(max_limit)
+            .run();
 
 
-
-}
-
-
-else{
-
-console.log('valid availabilityZone');
-    const entries = await r
-        .table('logs')
-        .between(minDate.toDate(), maxDate.toDate(), { index: 'time' })
-	.filter({ availabilityZone :avzone  }  )
- 	.pluck('region', 'availabilityZone')
-       
-	.limit(max_limit)
-        .run();
-
-
-    ctx.status = 200;
-    ctx.body = entries;
+        ctx.status = 200;
+        ctx.body = entries;
+        const entlen = entries.length;
+        console.log('entlen : ' + entlen);
 
 
 
-}
+
+
+    } else {
+
+        console.log('valid availabilityZone');
+        const entries = await r
+            .table('logs')
+            .between(minDate.toDate(), maxDate.toDate(), {
+                index: 'time'
+            })
+            .filter({
+                availabilityZone: avzone
+            })
+            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+
+            .limit(max_limit)
+            .run();
+
+
+        ctx.status = 200;
+        ctx.body = entries;
+        const entlen = entries.length;
+        console.log('entlen : ' + entlen);
+
+
+
+
+    }
 
 
 });
@@ -337,6 +384,7 @@ console.log('valid availabilityZone');
 // Use router middleware
 app.use(router.routes());
 app.use(router.allowedMethods());
+
 
 // Start server on app port.
 const port = nconf.get('app_port');

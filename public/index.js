@@ -10,10 +10,11 @@ function createNode(element) {
 
   function searchlogs(){
   let ul = document.getElementById('logslist');
-  let x = document.getElementById('x');
-  let timedelta  = document.getElementById('timedelta');
-
-console.log(ul);
+  let x = document.getElementById('x').value;
+  let timedelta  = document.getElementById('timedelta').value;
+// let timedelta = tdv.options[tdv.selectedIndex].value;
+ console.log('timedelta- ' + timedelta);
+// console.log(ul);
 // const url="http://cuddly-treefrog.hackathon.venom360.com/api/logs/cratedb?min=2018-02-12T00:00:00.000Z&max=2018-02-12T00:00:09.999Z";
 var url = window.location.toString();
 url = url+"/api/logs/";
@@ -33,7 +34,7 @@ if(timedelta == "2"){
 }
 url = url+param1;
 fetchDateUrl(url);
-    
+
   }
 
 //   let ul = document.getElementById('logslist');

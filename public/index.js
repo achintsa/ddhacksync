@@ -12,6 +12,7 @@ function createNode(element) {
 console.log(ul);
 // const url="http://cuddly-treefrog.hackathon.venom360.com/api/logs/cratedb?min=2018-02-12T00:00:00.000Z&max=2018-02-12T00:00:09.999Z";
 const url = window.location.toString();
+
 // const url = 'https://randomuser.me/api/?results=10';
   fetch(url)
   .then((resp) => resp.json())

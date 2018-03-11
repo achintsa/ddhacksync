@@ -1,1 +1,1 @@
-sample-ui
+UI front end for log analytics app

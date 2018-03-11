@@ -1,13 +1,7 @@
-# Hackathon Sample Server
+# Digital Domain Hackathon Log Analytics Server
 
-This is a simple Node.js server which talks with both the
+This is a  Node.js server which talks with both the
 [RethinkDB](https://www.rethinkdb.com/api/javascript/)
-and
-[CrateDB](https://crate.io/docs/crate/reference/en/latest/general/index.html)
-databases.
-
-Feel free to edit this code however you would like, or delete
-it and start over from scratch.
 
 Two endpoints are available:
 
@@ -39,3 +33,9 @@ for example:
 GET /api/logs/rethinkdb
 GET /api/logs/cratedb
 ```
+
+
+API also exposed as-
+/logs/rethinkdblastxhour
+/logs/rethinkdblastxminute
+/logs/rethinkdblastxseconds'

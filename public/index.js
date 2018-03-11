@@ -8,23 +8,45 @@ function createNode(element) {
     return parent.appendChild(el);
   }
 
-  const ul = document.getElementById('logslist');
+  let ul = document.getElementById('logslist');
+  let x = document.getElementById('x');
+  let timedelta  = document.getElementById('timedelta');
+
 console.log(ul);
 // const url="http://cuddly-treefrog.hackathon.venom360.com/api/logs/cratedb?min=2018-02-12T00:00:00.000Z&max=2018-02-12T00:00:09.999Z";
-const url = window.location.toString();
+var url = window.location.toString();
+url = url+"/api/logs/";
+var param1;
+//seconds
+if(timedelta == "0"){
+  param1 = "rethinkdblastxseconds" + "?x=" + x ;
+}
+//minutes
+if(timedelta == "1"){
+  param1 = "rethinkdblastxminutes" + "?x=" + x ;
 
+}
+//hour
+if(timedelta == "2"){
+  param1 = "rethinkdblastxminutes" + "?x=" + x ;
+}
+url = url+param1;
+fetchDateUrl(url);
 // const url = 'https://randomuser.me/api/?results=10';
+
+function fetchDateUrl(url){
+
   fetch(url)
   .then((resp) => resp.json())
   .then(function(data) {
-    let authors = data;
-	console.log("below data");
-    return authors.map(function(author) {
+    let logsList = data;
+  
+    return logsList.map(function(logi) {
       let li = createNode('li'),
           //img = createNode('img'),
           span = createNode('span');
       //img.src = author.picture.medium;
-      span.innerHTML = `${  JSON.stringify(author, null,2)  }`;
+      span.innerHTML = `${  JSON.stringify(logi, null,2)  }`;
       //append(li, img);
       append(li, span);
       append(ul, li);
@@ -32,7 +54,11 @@ const url = window.location.toString();
   })
   .catch(function(error) {
     console.log(error);
-  });   
+  });  
+
+
+}
+ 
 
 
 

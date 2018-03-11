@@ -47,12 +47,30 @@
                 </header>
                 <!-- The main content area, you could put logs here -->
                 <main>
-                    <p>Log Streamed Data would eb shown here</p>
+                    <p>Log Streamed Data would be shown here</p>
                     <p>
                         Analytics including
                     </p>
                     <ul class="items">
                         <li>List of user-agents in logs in last X hours/minutes/seconds</li>
+
+                        <div id="x"> X <input type="text" name="x"> </div>
+                        <div id = "timedelta" >Time Delta
+                            <select>
+                                  <option value="0">Seconds</option>
+                                  <option value="1">Minutes</option>
+                                  <option value="2">Hours</option>
+                                 
+                                </select>
+
+                        </div>
+
+                        <div style="visibility: hidden">
+                            <div id="startdt"> Start Time <input  type="text" name="startdatetime"> </div>      <div id="enddt" > End Time <input type="text"  name="enddatetime"> </div>
+                        </div>
+
+                        <ul id="logslist"> </ul>
+                        
                         <li>List of URLs being hit</li>
                         <li class="selected">Could be a list of JSON log entries</li>
                         <li>List of IPs and Analyzing DDoS attacks probability</li>
@@ -61,7 +79,7 @@
 			
 
                     </ul>
-		<ul id="logslist"> </ul>
+		<!-- <ul id="logslist"> </ul> -->
 
 
 

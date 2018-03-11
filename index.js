@@ -31,7 +31,7 @@ nconf
         rethink_database: 'hackathon',
         rethink_port: 28015,
         crate_port: 4200,
-        app_port: 8081
+        app_port: 8080
     })
     .required([
         'rethink_database',

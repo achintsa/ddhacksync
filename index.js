@@ -31,7 +31,7 @@ nconf
         rethink_database: 'hackathon',
         rethink_port: 28015,
         crate_port: 4200,
-        app_port: 8080
+        app_port: 8081
     })
     .required([
         'rethink_database',
@@ -91,7 +91,7 @@ router.get('/logs/rethinkdb', async ctx => {
             .between(minDate.toDate(), maxDate.toDate(), {
                 index: 'time'
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
@@ -113,7 +113,7 @@ router.get('/logs/rethinkdb', async ctx => {
             .filter({
                 availabilityZone: avzone
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
@@ -190,7 +190,7 @@ router.get('/logs/rethinkdblastxhour', async ctx => {
             .between(minDate.toDate(), maxDate.toDate(), {
                 index: 'time'
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
@@ -212,7 +212,7 @@ router.get('/logs/rethinkdblastxhour', async ctx => {
             .filter({
                 availabilityZone: avzone
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
@@ -261,7 +261,7 @@ router.get('/logs/rethinkdblastxminutes', async ctx => {
             .between(minDate.toDate(), maxDate.toDate(), {
                 index: 'time'
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
@@ -283,7 +283,7 @@ router.get('/logs/rethinkdblastxminutes', async ctx => {
             .filter({
                 availabilityZone: avzone
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
@@ -334,7 +334,7 @@ router.get('/logs/rethinkdblastxseconds', async ctx => {
             .between(minDate.toDate(), maxDate.toDate(), {
                 index: 'time'
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
@@ -360,7 +360,7 @@ router.get('/logs/rethinkdblastxseconds', async ctx => {
             .filter({
                 availabilityZone: avzone
             })
-            .pluck('region', 'availabilityZone', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
+            .pluck('region', 'availabilityZone', 'publicIpv4', 'ms', { 'req' : [ { 'headers' : [ "user-agent"  ]   } , "url" ]   }  )
 
             .limit(max_limit)
             .run();
